@@ -16,7 +16,7 @@ const float maxTimer = 10.0f;
 class Game {
 public:
 	bool keys[1024];
-	static GAMESTATE state;
+	GAMESTATE state;
 	const float width, height;
 	std::vector<std::vector<Tile>> tiles;
 	Game(const float width, const float height);

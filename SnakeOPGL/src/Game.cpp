@@ -1,19 +1,21 @@
 #include "Game.h"
 
-Game::Game(const float width, const float height): width(width), height(height){}
+Game::Game(const float width, const float height): width(width), height(height), state(ACTIVE){}
 Tile::Tile(glm::vec2 position) :position(position){}
-GAMESTATE Game::state = ACTIVE;
 SpriteRenderer* renderer;
 Player* player;
+bool toggleLock = false;
 void Game::Init() {
 	
 	InitMap();
 	Ressource::LoadShader("../shader/SpriteShader.vs", NULL, "../shader/SpriteShader.fs","SpriteShader");
+	Ressource::LoadTexture("../texture/snakeTail.png", true, "tail");
 	Ressource::LoadTexture("../texture/snakeBody.png", true, "body");
+	Ressource::LoadTexture("../texture/snakeHead.png", true, "head");
 	glm::mat4 projection = glm::ortho(0.0f, width, 0.0f, height,-1.0f,1.0f);
 	Ressource::GetShader("SpriteShader").setMat4("projection", projection);
 	renderer = new SpriteRenderer(Ressource::GetShader("SpriteShader"));
-	player = new Player(Ressource::GetTexture("body"), glm::ivec2(30, 10), tiles);
+	player = new Player(Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail"), glm::ivec2(30, 10), tiles);
 	return;
 }
 void Game::InitMap() {
@@ -38,8 +40,10 @@ void Game::Update(float deltaTime) {
 	if (Game::state == ACTIVE) {
 		timer -= deltaTime * speed;
 		if (timer <= 0.0f) {
-			player->Move();
+			int resultMove = player->Move();
 			timer = maxTimer;
+			if (resultMove == -1)
+				state = OVER;
 		}
 	}
 		
@@ -48,15 +52,28 @@ void Game::Update(float deltaTime) {
 }
 
 void Game::ProcessInput() {
-	if (keys[GLFW_KEY_A] && player->curDir != DROITE)
-		player->nextDir = GAUCHE;
-	if (keys[GLFW_KEY_D] && player->curDir != GAUCHE)
-		player->nextDir = DROITE;
-	if (keys[GLFW_KEY_W] && player->curDir != BAS)
-		player->nextDir = HAUT;
-	if (keys[GLFW_KEY_S] && player->curDir != HAUT)
-		player->nextDir = BAS;
-}
+	if (Game::state == ACTIVE || Game::state == PAUSE) {
+		if (keys[GLFW_KEY_A] && player->curDir != DROITE)
+			player->nextDir = GAUCHE;
+		if (keys[GLFW_KEY_D] && player->curDir != GAUCHE)
+			player->nextDir = DROITE;
+		if (keys[GLFW_KEY_W] && player->curDir != BAS)
+			player->nextDir = HAUT;
+		if (keys[GLFW_KEY_S] && player->curDir != HAUT)
+			player->nextDir = BAS;
+		if (keys[GLFW_KEY_P] && !toggleLock && state != PAUSE) {
+			toggleLock = true;
+			state = PAUSE;
+		}
+		else if(keys[GLFW_KEY_P] && !toggleLock && state == PAUSE) {
+			toggleLock = true;
+			state = ACTIVE;
+		}
+		if (!keys[GLFW_KEY_P])
+			toggleLock = false;
+	}
+	}
+
 void Game::Render() {
 	player->Draw(*renderer);
 }

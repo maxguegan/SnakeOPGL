@@ -24,10 +24,12 @@ class Player {
 		Direction nextDir;
 		std::vector<std::vector<Tile>>& map;
 		Texture& headTexture;
+		Texture& bodyTexture;
+		Texture& tailTexture;
 		std::vector<GameObject> body;
 		glm::ivec2 position[MAXSIZE];
-		Player(Texture& headTexture, glm::ivec2 pos, std::vector<std::vector<Tile>>& map);
-		void Move();
+		Player(Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::ivec2 pos, std::vector<std::vector<Tile>>& map);
+		int Move();
 		void updatePos();
 		void Draw(SpriteRenderer& renderer);
 };
