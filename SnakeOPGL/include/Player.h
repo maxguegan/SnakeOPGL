@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 #include "GameObject.h"
-#include "Game.h"
 #include "Tile.h"
+#include "Game.h"
 #include "glm/glm.hpp"
 #include "Texture.h"
 const int MAXSIZE = 100;
@@ -25,6 +25,7 @@ class Player {
 		std::vector<std::vector<Tile>>& map;
 		Texture& headTexture;
 		std::vector<GameObject> body;
+		glm::ivec2 position[MAXSIZE];
 		Player(Texture& headTexture, glm::ivec2 pos, std::vector<std::vector<Tile>>& map);
 		void Move();
 		void updatePos();

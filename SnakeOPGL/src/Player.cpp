@@ -4,7 +4,9 @@ Player::Player(Texture& headTexture, glm::ivec2 pos, std::vector<std::vector<Til
 	: headTexture(headTexture), headPos(pos),map(map), curDir(GAUCHE), nextDir(GAUCHE)
 {
 
-	for (int i = 0; i < STARTSIZE; i++) {
+	for (int i = 0; i < STARTSIZE + 1; i++) {
+		this->position[i] = glm::ivec2(headPos.x + i, headPos.y);
+		map[headPos.y][headPos.x + i].state = SNAKE;
 		this->body.push_back(GameObject(headTexture, map[headPos.y][headPos.x + i].position, glm::vec2(20.0f)));
 	}
 }
@@ -23,38 +25,44 @@ void Player::Move() {
 	case DROITE:
 		if (headPos.x < limitX -1) {
 			headPos.x += 1;
-			updatePos();
+			
 		}
 		break;
 	case GAUCHE:
 		if (headPos.x > 0) {
 			headPos.x -= 1;
-			updatePos();
+			
 		}
 		break;
 	case HAUT:
 		if (headPos.y < limitY - 1) {
 			headPos.y += 1;
-			updatePos();
+			
 		}
 		break;
 	case BAS:
 		if (headPos.y > 0) {
 			headPos.y -= 1;
-			updatePos();
+			
 		}
 		break;
 	default:
 		break;
 	}
+	if (map[headPos.y][headPos.x].state == SNAKE)
+		Game::state = OVER;
+	updatePos();
 }
 
 void Player::updatePos() {
-	for (int i = body.size(); i > 0; i--)
+	map[position[body.size() - 1].y][position[body.size() - 1].x].state = EMPTY;
+	for (int i = body.size() - 1; i > 0; i--)
 	{
+		position[i] = position[i - 1];
 		body[i].position = body[i - 1].position;
 		
 	}
+	position[0] = glm::ivec2(headPos.x, headPos.y);
 	body[0].position = map[headPos.y][headPos.x].position;
-
+	map[headPos.y][headPos.x].state = SNAKE;
 }

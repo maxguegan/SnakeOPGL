@@ -1,11 +1,12 @@
 #include "Game.h"
 
 Game::Game(const float width, const float height): width(width), height(height){}
-Tile::Tile(glm::vec2 position) :position(position), state(EMPTY) {}
-
+Tile::Tile(glm::vec2 position) :position(position){}
+GAMESTATE Game::state = ACTIVE;
 SpriteRenderer* renderer;
 Player* player;
 void Game::Init() {
+	
 	InitMap();
 	Ressource::LoadShader("../shader/SpriteShader.vs", NULL, "../shader/SpriteShader.fs","SpriteShader");
 	Ressource::LoadTexture("../texture/snakeBody.png", true, "body");
@@ -34,11 +35,16 @@ void Game::InitMap() {
 }
 void Game::Update(float deltaTime) {
 	float speed = 10.0f; 
-	timer -= deltaTime * speed;
-	if (timer <= 0.0f) {
-		player->Move();
-		timer = maxTimer;
+	if (Game::state == ACTIVE) {
+		timer -= deltaTime * speed;
+		if (timer <= 0.0f) {
+			player->Move();
+			timer = maxTimer;
+		}
 	}
+		
+	
+	
 }
 
 void Game::ProcessInput() {

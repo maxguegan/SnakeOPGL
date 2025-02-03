@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include "Texture.h"
 #include "SpriteRenderer.h"
+#include "Tile.h"
 class GameObject
 {
 public:
@@ -20,11 +21,11 @@ public:
 	
 	Texture sprite;
 
-	GameObject();
-	GameObject(Texture tex,	glm::vec2 position,  glm::vec2 size, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f);
+	GameObject(Texture tex,	glm::vec2 pos,  glm::vec2 size, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f);
 	
 	virtual void draw(SpriteRenderer & renderer);
 
 	~GameObject();
+
 };
 
