@@ -4,6 +4,7 @@ Game::Game(const float width, const float height): width(width), height(height),
 Tile::Tile(glm::vec2 position) :position(position){}
 SpriteRenderer* renderer;
 Player* player;
+BonusItem* bonus;
 bool toggleLock = false;
 void Game::Init() {
 	
@@ -12,10 +13,13 @@ void Game::Init() {
 	Ressource::LoadTexture("../texture/snakeTail.png", true, "tail");
 	Ressource::LoadTexture("../texture/snakeBody.png", true, "body");
 	Ressource::LoadTexture("../texture/snakeHead.png", true, "head");
+	Ressource::LoadTexture("../texture/bonus.png", true, "bonus");
 	glm::mat4 projection = glm::ortho(0.0f, width, 0.0f, height,-1.0f,1.0f);
 	Ressource::GetShader("SpriteShader").setMat4("projection", projection);
 	renderer = new SpriteRenderer(Ressource::GetShader("SpriteShader"));
-	player = new Player(Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail"), glm::ivec2(30, 10), tiles);
+	player = new Player(Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail"), glm::ivec2(tiles[0].size()/2, tiles.size()/2),glm::vec2(tileSize), tiles);
+	bonus = new BonusItem(Ressource::GetTexture("bonus"),glm::vec2(0.0f),glm::vec2(tileSize));
+	MoveBonus();
 	return;
 }
 void Game::InitMap() {
@@ -36,7 +40,7 @@ void Game::InitMap() {
 	}
 }
 void Game::Update(float deltaTime) {
-	float speed = 10.0f; 
+	float speed = 20.0f; 
 	if (Game::state == ACTIVE) {
 		timer -= deltaTime * speed;
 		if (timer <= 0.0f) {
@@ -44,6 +48,8 @@ void Game::Update(float deltaTime) {
 			timer = maxTimer;
 			if (resultMove == -1)
 				state = OVER;
+			if (resultMove == 1)
+				MoveBonus();
 		}
 	}
 		
@@ -73,7 +79,18 @@ void Game::ProcessInput() {
 			toggleLock = false;
 	}
 	}
+void Game::MoveBonus() {
+	int newPosX;
+	int newPosY;
+	do {
+		newPosX = std::rand() % tiles[0].size();
+		newPosY = std::rand() % tiles.size();
 
+	} while (tiles[newPosY][newPosX].state == SNAKE);
+	tiles[newPosY][newPosX].state = BONUS;
+	bonus->position = tiles[newPosY][newPosX].position;
+}
 void Game::Render() {
 	player->Draw(*renderer);
+	bonus->draw(*renderer);
 }

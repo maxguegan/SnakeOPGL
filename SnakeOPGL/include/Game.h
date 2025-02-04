@@ -5,6 +5,7 @@
 #include "SpriteRenderer.h"
 #include "Player.h"
 #include "Tile.h"
+#include "BonusItem.h"
 
 enum GAMESTATE
 {
@@ -24,9 +25,9 @@ public:
 	void Render();
 	void Update(float deltaTime);
 	void ProcessInput();
-
+	void MoveBonus();
 private:
-	const float tileSize = 21.0f;
+	const float tileSize = 30.0f;
 	void InitMap();
 	float timer = maxTimer;
 };
