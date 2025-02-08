@@ -6,7 +6,6 @@ SpriteRenderer* renderer;
 Player* player;
 BonusItem* bonus;
 TextRenderer* ui;
-bool toggleLock = false;
 std::string test;
 void Game::Init() {
 	
@@ -47,7 +46,7 @@ void Game::InitMap() {
 	}
 }
 void Game::Update(float deltaTime) {
-	float speed = 20.0f + (1 * (score / 20)); 
+	float speed = 20.0f + (score/50); 
 	if (Game::state == ACTIVE) {
 		timer -= deltaTime * speed;
 		if (timer <= 0.0f) {
@@ -80,17 +79,24 @@ void Game::ProcessInput() {
 			player->nextDir = HAUT;
 		if (keys[GLFW_KEY_S] && player->curDir != HAUT)
 			player->nextDir = BAS;
-		if (keys[GLFW_KEY_P] && !toggleLock && state != PAUSE) {
-			toggleLock = true;
+		if (keys[GLFW_KEY_P] && !lockKeys[GLFW_KEY_P] && state != PAUSE) {
+			lockKeys[GLFW_KEY_P] = true;
 			state = PAUSE;
 		}
-		else if(keys[GLFW_KEY_P] && !toggleLock && state == PAUSE) {
-			toggleLock = true;
+		else if(keys[GLFW_KEY_P] && !lockKeys[GLFW_KEY_P] && state == PAUSE) {
+			lockKeys[GLFW_KEY_P] = true;
 			state = ACTIVE;
 		}
 		if (!keys[GLFW_KEY_P])
-			toggleLock = false;
+			lockKeys[GLFW_KEY_P] = false;
 	}
+	
+	if (keys[GLFW_KEY_R] && !lockKeys[GLFW_KEY_R] && (state == PAUSE || state == OVER)) {
+		lockKeys[GLFW_KEY_R] = true;
+		Restart();
+	}
+	if (!keys[GLFW_KEY_R])
+		lockKeys[GLFW_KEY_R] = false;
 	}
 void Game::MoveBonus() {
 	int newPosX;
@@ -103,8 +109,20 @@ void Game::MoveBonus() {
 	tiles[newPosY][newPosX].state = BONUS;
 	bonus->position = tiles[newPosY][newPosX].position;
 }
+void Game::Restart() {
+	player->GameOver(glm::ivec2(tiles[0].size() / 2 - 3, tiles.size() / 2));
+	score = 0;
+	state = ACTIVE;
+	test = "Score : ";
+	test.append(std::to_string(score));
+	MoveBonus();
+}
 void Game::Render() {
 	player->Draw(*renderer);
 	bonus->draw(*renderer);
 	ui->DrawText(test.c_str(), 25.0f, 500.0f, 1.0f, glm::vec3(1.0f, 1.0f, 0.0f), Ressource::GetShader("TextShader"));
+	if(state == PAUSE)
+		ui->DrawText("PAUSE", width / 2 - 150, height / 2, 2.0f, glm::vec3(1.0f, 1.0f, 0.0f), Ressource::GetShader("TextShader"));
+	if (state == OVER)
+		ui->DrawText("GAME OVER", width / 2 - 300, height / 2, 2.0f, glm::vec3(1.0f, 1.0f, 0.0f), Ressource::GetShader("TextShader"));
 }

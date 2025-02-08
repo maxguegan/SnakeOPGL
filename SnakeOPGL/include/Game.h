@@ -17,6 +17,7 @@ const float maxTimer = 10.0f;
 class Game {
 public:
 	bool keys[1024];
+	bool lockKeys[1024];
 	GAMESTATE state;
 	const float width, height;
 	std::vector<std::vector<Tile>> tiles;
@@ -27,7 +28,7 @@ public:
 	void Update(float deltaTime);
 	void ProcessInput();
 	void MoveBonus();
-	
+	void Restart();
 private:
 	const float tileSize = 30.0f;
 	void InitMap();

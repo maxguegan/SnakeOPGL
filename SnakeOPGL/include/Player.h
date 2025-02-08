@@ -31,9 +31,10 @@ class Player {
 		glm::ivec2 position[MAXSIZE];
 		Player(Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::ivec2 pos, glm::vec2 size, std::vector<std::vector<Tile>>& map);
 		int Move();
-		
 		void Draw(SpriteRenderer& renderer);
+		void GameOver(glm::ivec2 resPos);
 private:
+	void Spawn(glm::ivec2 resPos);
 	void updatePos();
 	void addSize();
 };
