@@ -1,24 +1,31 @@
 #include "Game.h"
 
-Game::Game(const float width, const float height): width(width), height(height), state(ACTIVE){}
+Game::Game(const float width, const float height): width(width), height(height), state(ACTIVE), score(0){}
 Tile::Tile(glm::vec2 position) :position(position){}
 SpriteRenderer* renderer;
 Player* player;
 BonusItem* bonus;
+TextRenderer* ui;
 bool toggleLock = false;
+std::string test;
 void Game::Init() {
 	
 	InitMap();
 	Ressource::LoadShader("../shader/SpriteShader.vs", NULL, "../shader/SpriteShader.fs","SpriteShader");
+	Ressource::LoadShader("../shader/TextShader.vs", NULL, "../shader/TextShader.fs", "TextShader");
 	Ressource::LoadTexture("../texture/snakeTail.png", true, "tail");
 	Ressource::LoadTexture("../texture/snakeBody.png", true, "body");
 	Ressource::LoadTexture("../texture/snakeHead.png", true, "head");
 	Ressource::LoadTexture("../texture/bonus.png", true, "bonus");
 	glm::mat4 projection = glm::ortho(0.0f, width, 0.0f, height,-1.0f,1.0f);
 	Ressource::GetShader("SpriteShader").setMat4("projection", projection);
+	Ressource::GetShader("TextShader").setMat4("projection", projection);
 	renderer = new SpriteRenderer(Ressource::GetShader("SpriteShader"));
 	player = new Player(Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail"), glm::ivec2(tiles[0].size()/2, tiles.size()/2),glm::vec2(tileSize), tiles);
 	bonus = new BonusItem(Ressource::GetTexture("bonus"),glm::vec2(0.0f),glm::vec2(tileSize));
+	ui = new TextRenderer("../fonts/arial.ttf");
+	test = "Score : ";
+	test.append(std::to_string(score));
 	MoveBonus();
 	return;
 }
@@ -40,7 +47,7 @@ void Game::InitMap() {
 	}
 }
 void Game::Update(float deltaTime) {
-	float speed = 20.0f; 
+	float speed = 20.0f + (1 * (score / 20)); 
 	if (Game::state == ACTIVE) {
 		timer -= deltaTime * speed;
 		if (timer <= 0.0f) {
@@ -48,8 +55,14 @@ void Game::Update(float deltaTime) {
 			timer = maxTimer;
 			if (resultMove == -1)
 				state = OVER;
-			if (resultMove == 1)
+			if (resultMove == 1) {
 				MoveBonus();
+				score += bonus->value;
+				bonus->value += bonus->value / 5;
+				test = "Score : ";
+				test.append(std::to_string(score));
+			}
+				
 		}
 	}
 		
@@ -93,4 +106,5 @@ void Game::MoveBonus() {
 void Game::Render() {
 	player->Draw(*renderer);
 	bonus->draw(*renderer);
+	ui->DrawText(test.c_str(), 25.0f, 500.0f, 1.0f, glm::vec3(1.0f, 1.0f, 0.0f), Ressource::GetShader("TextShader"));
 }

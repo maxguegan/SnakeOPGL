@@ -6,7 +6,7 @@
 #include "Player.h"
 #include "Tile.h"
 #include "BonusItem.h"
-
+#include "TextRenderer.h"
 enum GAMESTATE
 {
 	ACTIVE,
@@ -20,12 +20,14 @@ public:
 	GAMESTATE state;
 	const float width, height;
 	std::vector<std::vector<Tile>> tiles;
+	int score;
 	Game(const float width, const float height);
 	void Init();
 	void Render();
 	void Update(float deltaTime);
 	void ProcessInput();
 	void MoveBonus();
+	
 private:
 	const float tileSize = 30.0f;
 	void InitMap();
