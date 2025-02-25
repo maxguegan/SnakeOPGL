@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\BonusItem.h" />
+    <ClInclude Include="include\Effect.h" />
     <ClInclude Include="include\freetype\config\ftconfig.h" />
     <ClInclude Include="include\freetype\config\ftheader.h" />
     <ClInclude Include="include\freetype\config\ftmodule.h" />

@@ -26,19 +26,19 @@ void Game::Init() {
 	test = "Score : ";
 	test.append(std::to_string(score));
 	MoveBonus();
+	player->effects.push_back(Effect(SPEED, 5.0f, 1));
 	return;
 }
 void Game::InitMap() {
 	const int nbCol = static_cast<int>(this->width / this->tileSize);
 	const int nbRow = static_cast<int>(this->height / this->tileSize);
-	float offsetX = this->width - this->tileSize * static_cast<float>(nbCol);
-	float offsetY = this->height - this->tileSize * static_cast<float>(nbRow);
-	std::cout << " tile stat " << nbRow << ", " << nbCol << ", " << offsetX << ", " << offsetY << std::endl;
+	float offsetX = (this->width - this->tileSize * static_cast<float>(nbCol)) / 2;
+	float offsetY = (this->height - this->tileSize * static_cast<float>(nbRow)) / 2;
 	for (int i = 0; i < nbRow; i++) {
 		std::vector<Tile> row;
 		for (int j = 0; j < nbCol; j++) {
-			float posY = this->tileSize * i;
-			float posX = this->tileSize * j;
+			float posY = this->tileSize * i + offsetY;
+			float posX = this->tileSize * j + offsetX;
 			Tile newTile(glm::vec2(posX, posY));
 			row.push_back(newTile);
 		}
@@ -46,9 +46,10 @@ void Game::InitMap() {
 	}
 }
 void Game::Update(float deltaTime) {
-	float speed = 20.0f + (score/50); 
+	float speed = player->speed + (score/50); 
 	if (Game::state == ACTIVE) {
 		timer -= deltaTime * speed;
+		player->update(deltaTime);
 		if (timer <= 0.0f) {
 			int resultMove = player->Move();
 			timer = maxTimer;
@@ -113,6 +114,7 @@ void Game::Restart() {
 	player->GameOver(glm::ivec2(tiles[0].size() / 2 - 3, tiles.size() / 2));
 	score = 0;
 	state = ACTIVE;
+	bonus->value = 100;
 	test = "Score : ";
 	test.append(std::to_string(score));
 	MoveBonus();

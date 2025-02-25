@@ -1,7 +1,7 @@
 #include "Player.h"
 
 Player::Player(Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::ivec2 pos, glm::vec2 size, std::vector<std::vector<Tile>>& map)
-	: headTexture(headTexture), bodyTexture(bodyTexture), tailTexture(tailTexture),headPos(pos),size(size), map(map), curDir(GAUCHE), nextDir(GAUCHE)
+	: headTexture(headTexture), bodyTexture(bodyTexture), tailTexture(tailTexture),headPos(pos),size(size), map(map), speed(BASESPEED), curDir(GAUCHE), nextDir(GAUCHE)
 {
 	Spawn(headPos);
 	
@@ -20,6 +20,34 @@ void Player::Spawn(glm::ivec2 resPos) {
 	//assign correct texture
 	body[0].sprite = headTexture;
 	body[body.size() - 1].sprite = tailTexture;
+}
+
+void Player::update(float deltaTime) {
+	if (effects.size() > 0) {
+		std::vector<Effect>::iterator it;
+		for (it = effects.begin(); it < effects.end(); it++) {
+			switch ((*it).type) {
+			case TRANSPARENT:
+				break;
+			case SPEED:
+				speed = 30.0f;
+				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 0.5f, 0.5f, 1.0f));
+				break;
+			case POINT:
+				break;
+			}
+			(*it).duration -= deltaTime;
+			if ((*it).duration <= 0.0f)
+			{
+				speed = BASESPEED;
+				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+				std::cout << "test" << std::endl;
+				effects.erase(it);
+				return;
+			}
+				
+		}
+	}
 }
 void Player::GameOver(glm::ivec2 resPos) {
 	for (int i = 0; i < body.size(); i++)
