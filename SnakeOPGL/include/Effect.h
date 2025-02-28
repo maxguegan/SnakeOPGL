@@ -1,6 +1,7 @@
 #pragma once
 
 enum EFFECTTYPE {
+	NONE,
 	SPEED,
 	POINT,
 	TRANSPARENT

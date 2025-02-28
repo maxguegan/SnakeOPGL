@@ -27,6 +27,8 @@ void Player::update(float deltaTime) {
 		for (it = effects.begin(); it < effects.end(); it++) {
 			switch ((*it).type) {
 			case TRANSPARENT:
+				Ressource::GetShader("SpriteShader").setBool("buffed", true);
+				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
 				break;
 			case SPEED:
 				speed = 30.0f;
@@ -53,12 +55,14 @@ void Player::update(float deltaTime) {
 void Player::GameOver(int restartTilePosX, int restartTilePosY) {
 	for(TileObject part : body)
 		map[part.tilePosY][part.tilePosX].state = EMPTY;
+	effects.clear();
 	Spawn(restartTilePosX, restartTilePosY);
 	
 }
 void Player::Draw(SpriteRenderer& renderer) {
 	for(GameObject part : body)
 		part.draw(renderer);
+	Ressource::GetShader("SpriteShader").setBool("buffed", false);
 }
 
 int Player::Move() {

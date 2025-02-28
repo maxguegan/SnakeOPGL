@@ -7,6 +7,7 @@
 #include "Tile.h"
 #include "BonusItem.h"
 #include "TextRenderer.h"
+#include "TileObject.h"
 enum GAMESTATE
 {
 	ACTIVE,
@@ -27,7 +28,7 @@ public:
 	void Render();
 	void Update(float deltaTime);
 	void ProcessInput();
-	void MoveBonus();
+	
 	void Restart();
 private:
 	const float tileSize = 30.0f;

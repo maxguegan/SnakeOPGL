@@ -22,12 +22,11 @@ void Game::Init() {
 	renderer = new SpriteRenderer(Ressource::GetShader("SpriteShader"));
 	player = new Player(tiles, tiles[0].size() / 2 - 3, tiles.size() / 2,Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail") ,glm::vec2(tileSize));
 	bonus = new BonusItem(tiles,0,0,Ressource::GetTexture("bonus"),glm::vec2(0.0f),glm::vec2(tileSize));
-	MoveBonus();
+	bonus->MoveBonus();
 	ui = new TextRenderer("../fonts/arial.ttf");
 	test = "Score : ";
 	test.append(std::to_string(score));
-	MoveBonus();
-	player->effects.push_back(Effect(SPEED, 5.0f, 1));
+	
 	return;
 }
 void Game::InitMap() {
@@ -57,7 +56,9 @@ void Game::Update(float deltaTime) {
 			if (resultMove == -1)
 				state = OVER;
 			if (resultMove == 1) {
-				MoveBonus();
+				if(bonus->effect == SPEED)
+					player->effects.push_back(Effect(SPEED, 5.0f, 1));
+				bonus->MoveBonus();;
 				score += bonus->value;
 				bonus->value += bonus->value / 5;
 				test = "Score : ";
@@ -100,17 +101,7 @@ void Game::ProcessInput() {
 	if (!keys[GLFW_KEY_R])
 		lockKeys[GLFW_KEY_R] = false;
 	}
-void Game::MoveBonus() {
-	int newPosX;
-	int newPosY;
-	do {
-		newPosX = std::rand() % tiles[0].size();
-		newPosY = std::rand() % tiles.size();
 
-	} while (tiles[newPosY][newPosX].state == SNAKE);
-	tiles[newPosY][newPosX].state = BONUS;
-	bonus->setPos(newPosX, newPosY);
-}
 void Game::Restart() {
 	player->GameOver(tiles[0].size() / 2 - 3, tiles.size() / 2);
 	score = 0;
@@ -119,7 +110,7 @@ void Game::Restart() {
 	//tiles[bonus->tilePosY][bonus->tilePosX].state = EMPTY;
 	test = "Score : ";
 	test.append(std::to_string(score));
-	MoveBonus();
+	bonus->MoveBonus();
 }
 void Game::Render() {
 	player->Draw(*renderer);
