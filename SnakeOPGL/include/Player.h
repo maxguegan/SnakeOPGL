@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "GameObject.h"
+#include "TileObject.h"
 #include "Tile.h"
 #include "Game.h"
 #include "glm/glm.hpp"
@@ -20,27 +20,25 @@ enum Direction
 };
 class Player {
 	public:
-		glm::ivec2 headPos;
 		glm::vec2 size;
 		Direction curDir;
 		Direction nextDir;
 		std::vector<std::vector<Tile>>& map;
 		std::vector<Effect> effects;
+		std::vector<TileObject> body;
 		Texture& headTexture;
-		Texture& bodyTexture;
+		Texture& bodyTexture;	
 		Texture& tailTexture;
 
 		float speed;
-
-		std::vector<GameObject> body;
-		glm::ivec2 position[MAXSIZE];
-		Player(Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::ivec2 pos, glm::vec2 size, std::vector<std::vector<Tile>>& map);
+		
+		Player(std::vector<std::vector<Tile>>& map, int startTilePosX, int startTilePosY, Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::vec2 size);
 		int Move();
 		void Draw(SpriteRenderer& renderer);
-		void GameOver(glm::ivec2 resPos);
+		void GameOver(int RestartTilePosX, int RestartTilePosY);
 		void update(float deltaTime);
 private:
-	void Spawn(glm::ivec2 resPos);
-	void updatePos();
+	void Spawn(int StartTilePosX, int StartTilePosY);
+	void updatePos(int headTilePosX, int headTilePosY);
 	void addSize();
 };

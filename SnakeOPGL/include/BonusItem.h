@@ -1,12 +1,12 @@
 #pragma once
-#include "GameObject.h"
+#include "TileObject.h"
 
-class BonusItem : public GameObject
+class BonusItem : public TileObject
 {
 
 public:
 	int value;
-	BonusItem(Texture tex, glm::vec2 pos, glm::vec2 size, int val = 100, glm::vec4 col = glm::vec4(1.0f), float rotate = 0.0f);
+	BonusItem(std::vector<std::vector<Tile>>& map , int x, int y, Texture tex, glm::vec2 pos, glm::vec2 size, int val = 100, glm::vec4 col = glm::vec4(1.0f), float rotate = 0.0f);
 	
 
 	

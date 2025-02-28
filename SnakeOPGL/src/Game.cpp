@@ -1,7 +1,7 @@
 #include "Game.h"
 
 Game::Game(const float width, const float height): width(width), height(height), state(ACTIVE), score(0){}
-Tile::Tile(glm::vec2 position) :position(position){}
+Tile::Tile(glm::vec2 position) :position(position), state(EMPTY){}
 SpriteRenderer* renderer;
 Player* player;
 BonusItem* bonus;
@@ -20,8 +20,9 @@ void Game::Init() {
 	Ressource::GetShader("SpriteShader").setMat4("projection", projection);
 	Ressource::GetShader("TextShader").setMat4("projection", projection);
 	renderer = new SpriteRenderer(Ressource::GetShader("SpriteShader"));
-	player = new Player(Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail"), glm::ivec2(tiles[0].size()/2, tiles.size()/2),glm::vec2(tileSize), tiles);
-	bonus = new BonusItem(Ressource::GetTexture("bonus"),glm::vec2(0.0f),glm::vec2(tileSize));
+	player = new Player(tiles, tiles[0].size() / 2 - 3, tiles.size() / 2,Ressource::GetTexture("head"), Ressource::GetTexture("body"), Ressource::GetTexture("tail") ,glm::vec2(tileSize));
+	bonus = new BonusItem(tiles,0,0,Ressource::GetTexture("bonus"),glm::vec2(0.0f),glm::vec2(tileSize));
+	MoveBonus();
 	ui = new TextRenderer("../fonts/arial.ttf");
 	test = "Score : ";
 	test.append(std::to_string(score));
@@ -108,13 +109,14 @@ void Game::MoveBonus() {
 
 	} while (tiles[newPosY][newPosX].state == SNAKE);
 	tiles[newPosY][newPosX].state = BONUS;
-	bonus->position = tiles[newPosY][newPosX].position;
+	bonus->setPos(newPosX, newPosY);
 }
 void Game::Restart() {
-	player->GameOver(glm::ivec2(tiles[0].size() / 2 - 3, tiles.size() / 2));
+	player->GameOver(tiles[0].size() / 2 - 3, tiles.size() / 2);
 	score = 0;
 	state = ACTIVE;
 	bonus->value = 100;
+	//tiles[bonus->tilePosY][bonus->tilePosX].state = EMPTY;
 	test = "Score : ";
 	test.append(std::to_string(score));
 	MoveBonus();

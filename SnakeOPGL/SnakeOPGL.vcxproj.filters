@@ -48,6 +48,12 @@
     <ClCompile Include="src\TextRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="include\TileObject.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TileObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">

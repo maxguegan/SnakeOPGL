@@ -134,6 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="include\TileObject.h" />
     <ClCompile Include="src\BonusItem.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="src\SpriteRenderer.cpp" />
     <ClCompile Include="src\TextRenderer.cpp" />
     <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TileObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\BonusItem.h" />
