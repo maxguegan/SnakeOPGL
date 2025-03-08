@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="include\TileObject.h" />
     <ClCompile Include="src\BonusItem.cpp" />
+    <ClCompile Include="src\Button.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\glad.c" />
@@ -147,9 +148,11 @@
     <ClCompile Include="src\TextRenderer.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\TileObject.cpp" />
+    <ClCompile Include="src\UIText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\BonusItem.h" />
+    <ClInclude Include="include\Button.h" />
     <ClInclude Include="include\Effect.h" />
     <ClInclude Include="include\freetype\config\ftconfig.h" />
     <ClInclude Include="include\freetype\config\ftheader.h" />
@@ -265,6 +268,7 @@
     <ClInclude Include="include\TextRenderer.h" />
     <ClInclude Include="include\Texture.h" />
     <ClInclude Include="include\Tile.h" />
+    <ClInclude Include="include\UIText.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\freetype.dll" />

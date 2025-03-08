@@ -115,3 +115,14 @@ TextRenderer::TextRenderer(const char* fonts) {
         glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D,0);
     }
+    glm::vec2 TextRenderer::getSize(std::string chaine) {
+        float tailleX = 0.0f, tailleY = 0.0f;
+        std::string::iterator c;
+        for (c = chaine.begin(); c != chaine.end(); c++) {
+            Character character = characters[*c];
+            tailleX += character.advance >> 6;
+            if (tailleY < character.size.y)
+                tailleY = character.size.y;
+        }
+        return glm::vec2(tailleX, tailleY);
+    }

@@ -47,6 +47,9 @@ int main() {
         lastFrame = curFrame;
         ProcessInput(window,game);
         game.ProcessInput();
+
+        
+
         glClearColor(0.25f, 0.3f, 0.5f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         game.Update(deltaTime);
@@ -60,10 +63,21 @@ int main() {
 }
 
 void ProcessInput(GLFWwindow* window, Game& game) {
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+   
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+        game.keys[GLFW_MOUSE_BUTTON_LEFT] = true;
+
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) 
+        game.keys[GLFW_MOUSE_BUTTON_LEFT] = false;
+
+    game.ProcessMouse(xpos, ypos);
+
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
-
+        
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         game.keys[GLFW_KEY_A] = true;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
@@ -76,6 +90,7 @@ void ProcessInput(GLFWwindow* window, Game& game) {
           game.keys[GLFW_KEY_P] = true;
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
         game.keys[GLFW_KEY_R] = true;
+    
 
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_RELEASE)
         game.keys[GLFW_KEY_A] = false;
@@ -89,4 +104,5 @@ void ProcessInput(GLFWwindow* window, Game& game) {
         game.keys[GLFW_KEY_P] = false;
     if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE)
         game.keys[GLFW_KEY_R] = false;
+
 }

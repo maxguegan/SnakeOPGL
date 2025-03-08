@@ -8,6 +8,7 @@
 #include "BonusItem.h"
 #include "TextRenderer.h"
 #include "TileObject.h"
+#include "UIText.h"
 enum GAMESTATE
 {
 	ACTIVE,
@@ -28,7 +29,7 @@ public:
 	void Render();
 	void Update(float deltaTime);
 	void ProcessInput();
-	
+	void ProcessMouse(double cursorPosX, double cursorPosY);
 	void Restart();
 private:
 	const float tileSize = 30.0f;

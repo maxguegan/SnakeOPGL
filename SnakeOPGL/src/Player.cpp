@@ -60,6 +60,7 @@ void Player::GameOver(int restartTilePosX, int restartTilePosY) {
 	
 }
 void Player::Draw(SpriteRenderer& renderer) {
+	Ressource::GetShader("SpriteShader").setBool("useTexture", true);
 	for(GameObject part : body)
 		part.draw(renderer);
 	Ressource::GetShader("SpriteShader").setBool("buffed", false);

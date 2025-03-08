@@ -19,6 +19,7 @@ void BonusItem::MoveBonus() {
 	this->setPos(newPosX, newPosY);
 }
 void BonusItem::draw(SpriteRenderer& renderer) {
+	Ressource::GetShader("SpriteShader").setBool("useTexture", true);
 	if (effect == SPEED) {
 		Ressource::GetShader("SpriteShader").setBool("buffed", true);
 		Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
