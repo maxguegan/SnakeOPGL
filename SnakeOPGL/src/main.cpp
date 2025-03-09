@@ -42,6 +42,8 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     while (!glfwWindowShouldClose(window)) 
     {
+
+        
         curFrame = glfwGetTime();
         deltaTime = curFrame - lastFrame;
         lastFrame = curFrame;

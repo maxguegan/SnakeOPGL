@@ -1,17 +1,22 @@
 #pragma once
-#include "GameObject.h"
-#include "TextRenderer.h"
 #include <glm/glm.hpp>
 #include <string>
+#include "GameObject.h"
+#include "UIText.h"
+#include "Ressource.h"
+
 class Button {
 
 public:
-	TextRenderer& textRenderer;
-	GameObject backGround;
-	Button(glm::vec2 pos, glm::vec2 size, glm::vec4 bgColor, std::string text);
+	UIText * buttonText;
+	GameObject * backGround;
+	Button(glm::vec2 pos, glm::vec2 size, glm::vec4 bgColor, std::string text, TextRenderer& renderer, Shader& shader);
+	~Button();
 	void setPos(glm::vec2 pos);
 	void setSize(glm::vec2 size);
 	void setColor(glm::vec4 color);
+	void Draw(SpriteRenderer& spriteRenderer);
+	bool OnClick(float posX,float posY);
 private:
 	glm::vec2 position;
 	glm::vec2 size;

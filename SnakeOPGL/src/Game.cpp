@@ -9,6 +9,7 @@ TextRenderer* textRenderer;
 UIText* scoreText;
 UIText* pauseText;
 UIText* gameOverText;
+Button* test;
 void Game::Init() {
 	
 	InitMap();
@@ -38,6 +39,7 @@ void Game::Init() {
 	posTextMilieu.x = (width - posTextMilieu.x) / 2;
 	posTextMilieu.y = (height - posTextMilieu.y) / 2;
 	gameOverText = new  UIText("GAME OVER", posTextMilieu, 2.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), *textRenderer, Ressource::GetShader("TextShader"));
+	test = new Button(glm::vec2(300.0f, 100.0f), glm::vec2(200.0f, 50.0f), glm::vec4(0.5f, 0.5f, 0.5f, 0.5f), "test", *textRenderer, Ressource::GetShader("TextShader"));
 	return;
 }
 void Game::InitMap() {
@@ -112,9 +114,12 @@ void Game::ProcessInput() {
 		lockKeys[GLFW_KEY_R] = false;
 	}
 void Game::ProcessMouse(double cursorPosX, double cursorPosY) {
+	cursorPosY = height - cursorPosY;//matrice de projection est de bas en haut alors que le get cursorpos est de haut en bas
 	if (keys[GLFW_MOUSE_BUTTON_LEFT] && !lockKeys[GLFW_MOUSE_BUTTON_LEFT]) {
 		lockKeys[GLFW_MOUSE_BUTTON_LEFT] = true;
-		std::cout << cursorPosX << " : " << cursorPosY << std::endl;
+		
+		if (test->OnClick(cursorPosX, cursorPosY))
+			Game::state = ACTIVE;
 	}
 		
 	if (!keys[GLFW_MOUSE_BUTTON_LEFT])
@@ -134,8 +139,11 @@ void Game::Render() {
 	player->Draw(*renderer);
 	bonus->draw(*renderer);
 	scoreText->Draw();
-	if (state == PAUSE)
+	if (state == PAUSE) {
 		pauseText->Draw();
+		test->Draw(*renderer);
+	}
+		
 	if (state == OVER)
 		gameOverText->Draw();
 }

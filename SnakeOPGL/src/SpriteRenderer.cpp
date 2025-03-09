@@ -19,7 +19,7 @@ void SpriteRenderer::Render(Texture& tex2D,glm::vec2 position, glm::vec2 size , 
 	model = glm::scale(model, glm::vec3(size, 1.0f));
 
 	this->shader.setMat4("model", model);
-	this->shader.setVec3("aColor", color);
+	this->shader.setVec4("aColor", color);
 
 	glActiveTexture(GL_TEXTURE0);
 	tex2D.bind();

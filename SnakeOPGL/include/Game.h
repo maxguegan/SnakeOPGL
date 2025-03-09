@@ -9,6 +9,7 @@
 #include "TextRenderer.h"
 #include "TileObject.h"
 #include "UIText.h"
+#include "Button.h"
 enum GAMESTATE
 {
 	ACTIVE,

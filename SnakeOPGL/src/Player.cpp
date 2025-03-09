@@ -44,7 +44,6 @@ void Player::update(float deltaTime) {
 				Ressource::GetShader("SpriteShader").setBool("buffed", false);
 				speed = BASESPEED;
 				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-				std::cout << "test" << std::endl;
 				effects.erase(it);
 				return;
 			}
