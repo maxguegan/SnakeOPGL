@@ -10,8 +10,7 @@ class SpriteRenderer
 {
 public:
 
-	float height, width, rotate;
-	glm::vec4 color;
+	
 
 	SpriteRenderer(Shader & shader);
 	~SpriteRenderer();
@@ -22,7 +21,7 @@ public:
 private:
 
 	unsigned int vao;
-	Shader shader;
+	Shader & shader;
 	void setupQuad();
 };
 

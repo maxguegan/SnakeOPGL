@@ -29,7 +29,7 @@ class Player {
 		Texture& headTexture;
 		Texture& bodyTexture;	
 		Texture& tailTexture;
-
+		glm::vec4 color = glm::vec4(1.0f);
 		float speed;
 		
 		Player(std::vector<std::vector<Tile>>& map, int startTilePosX, int startTilePosY, Texture& headTexture, Texture& bodyTexture, Texture& tailTexture, glm::vec2 size);
@@ -37,6 +37,8 @@ class Player {
 		void Draw(SpriteRenderer& renderer);
 		void GameOver(int RestartTilePosX, int RestartTilePosY);
 		void update(float deltaTime);
+		void addBuff(Effect buff);
+		void setColor(glm::vec4 color);
 private:
 	void Spawn(int StartTilePosX, int StartTilePosY);
 	void updatePos(int headTilePosX, int headTilePosY);

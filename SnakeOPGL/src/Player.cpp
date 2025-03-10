@@ -23,33 +23,46 @@ void Player::Spawn(int StartTilePosX, int StartTilePosY) {
 
 void Player::update(float deltaTime) {
 	if (effects.size() > 0) {
+		Ressource::GetShader("SpriteShader").setBool("buffed", true);
 		std::vector<Effect>::iterator it;
 		for (it = effects.begin(); it < effects.end(); it++) {
-			switch ((*it).type) {
-			case TRANSPARENT:
-				Ressource::GetShader("SpriteShader").setBool("buffed", true);
-				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
-				break;
-			case SPEED:
-				speed = 30.0f;
-				Ressource::GetShader("SpriteShader").setBool("buffed", true);
-				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
-				break;
-			case POINT:
-				break;
-			}
+			
 			(*it).duration -= deltaTime;
 			if ((*it).duration <= 0.0f)
 			{
-				Ressource::GetShader("SpriteShader").setBool("buffed", false);
 				speed = BASESPEED;
-				Ressource::GetShader("SpriteShader").setVec4("aColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 				effects.erase(it);
 				return;
 			}
 				
 		}
+	}else
+		Ressource::GetShader("SpriteShader").setBool("buffed", false);
+}
+void Player::addBuff(Effect buff) {
+	switch (buff.type) {
+	case TRANSPARENT:
+		
+		for (GameObject& object : body)
+			object.color = glm::vec4(0.7f, 0.7f, 0.7f, 0.5f);
+		break;
+	case SPEED:
+		for (Effect& effet : effects)
+			if (effet.type == SPEED) {
+				effet.duration += buff.duration;
+				break;
+			}
+				
+		speed = 30.0f;
+		setColor(glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+				
+			
+		
+		break;
+	case POINT:
+		break;
 	}
+	effects.push_back(buff);
 }
 void Player::GameOver(int restartTilePosX, int restartTilePosY) {
 	for(TileObject part : body)
@@ -60,7 +73,7 @@ void Player::GameOver(int restartTilePosX, int restartTilePosY) {
 }
 void Player::Draw(SpriteRenderer& renderer) {
 	Ressource::GetShader("SpriteShader").setBool("useTexture", true);
-	for(GameObject part : body)
+	for(GameObject & part : body)
 		part.draw(renderer);
 	Ressource::GetShader("SpriteShader").setBool("buffed", false);
 }
@@ -114,7 +127,7 @@ int Player::Move() {
 void Player::addSize() {
 	int size = body.size();
 	body[size - 1].sprite = bodyTexture;
-	body.push_back(TileObject(map, body[size - 1].tilePosX, body[size - 1].tilePosY,tailTexture, this->size));
+	body.push_back(TileObject(map, body[size - 1].tilePosX, body[size - 1].tilePosY,tailTexture, this->size,this->color));
 }
 
 void Player::updatePos(int headTilePosX, int headTilePosY) {
@@ -126,4 +139,9 @@ void Player::updatePos(int headTilePosX, int headTilePosY) {
 	}
 	body[0].setPos(headTilePosX,headTilePosY);
 	map[headTilePosY][headTilePosX].state = SNAKE;
+}
+void Player::setColor(glm::vec4 color) {
+	this->color = color;
+	for (GameObject& parts : body)
+		parts.color = color;
 }

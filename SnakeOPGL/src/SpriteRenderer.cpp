@@ -1,7 +1,7 @@
 #include "SpriteRenderer.h"
 
-SpriteRenderer::SpriteRenderer(Shader& shader) : width(0.0f), height(0.0f), rotate(0.0f), color(glm::vec4(1.0f)) {
-	this->shader = shader;
+SpriteRenderer::SpriteRenderer(Shader& shader) :shader(shader)
+{	
 	this->setupQuad();
 }
 

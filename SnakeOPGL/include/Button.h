@@ -14,7 +14,6 @@ public:
 	~Button();
 	void setPos(glm::vec2 pos);
 	void setSize(glm::vec2 size);
-	void setColor(glm::vec4 color);
 	void Draw(SpriteRenderer& spriteRenderer);
 	bool OnClick(float posX,float posY);
 private:

@@ -9,7 +9,9 @@ TextRenderer* textRenderer;
 UIText* scoreText;
 UIText* pauseText;
 UIText* gameOverText;
-Button* test;
+Button* resumeButton;
+Button* retryButton;
+Button* quitButton;
 void Game::Init() {
 	
 	InitMap();
@@ -39,7 +41,9 @@ void Game::Init() {
 	posTextMilieu.x = (width - posTextMilieu.x) / 2;
 	posTextMilieu.y = (height - posTextMilieu.y) / 2;
 	gameOverText = new  UIText("GAME OVER", posTextMilieu, 2.0f, glm::vec4(1.0f, 1.0f, 0.0f, 1.0f), *textRenderer, Ressource::GetShader("TextShader"));
-	test = new Button(glm::vec2(300.0f, 100.0f), glm::vec2(200.0f, 50.0f), glm::vec4(0.5f, 0.5f, 0.5f, 0.5f), "test", *textRenderer, Ressource::GetShader("TextShader"));
+	resumeButton = new Button(glm::vec2(200.0f, 100.0f), glm::vec2(150.0f, 50.0f), glm::vec4(0.5f, 0.5f, 0.5f, 0.5f), "Resume", *textRenderer, Ressource::GetShader("TextShader"));
+	retryButton = new Button(glm::vec2(200.0f, 100.0f), glm::vec2(150.0f, 50.0f), glm::vec4(0.5f, 0.5f, 0.5f, 0.5f), "Retry", *textRenderer, Ressource::GetShader("TextShader"));
+	quitButton = new Button(glm::vec2(400.0f, 100.0f), glm::vec2(150.0f, 50.0f), glm::vec4(0.5f, 0.5f, 0.5f, 0.5f), "Quit", *textRenderer, Ressource::GetShader("TextShader"));
 	return;
 }
 void Game::InitMap() {
@@ -70,7 +74,7 @@ void Game::Update(float deltaTime) {
 				state = OVER;
 			if (resultMove == 1) {
 				if(bonus->effect == SPEED)
-					player->effects.push_back(Effect(SPEED, 5.0f, 1));
+					player->addBuff(Effect(SPEED, 5.0f, 1));
 				bonus->MoveBonus();;
 				score += bonus->value;
 				bonus->value += bonus->value / 5;
@@ -117,9 +121,21 @@ void Game::ProcessMouse(double cursorPosX, double cursorPosY) {
 	cursorPosY = height - cursorPosY;//matrice de projection est de bas en haut alors que le get cursorpos est de haut en bas
 	if (keys[GLFW_MOUSE_BUTTON_LEFT] && !lockKeys[GLFW_MOUSE_BUTTON_LEFT]) {
 		lockKeys[GLFW_MOUSE_BUTTON_LEFT] = true;
-		
-		if (test->OnClick(cursorPosX, cursorPosY))
-			Game::state = ACTIVE;
+		if (Game::state == PAUSE) {
+			if (resumeButton->OnClick(cursorPosX, cursorPosY))
+				Game::state = ACTIVE;
+			if (quitButton->OnClick(cursorPosX, cursorPosY))
+				Game::state = ACTIVE;
+		}
+		if (Game::state == OVER) {
+			if (retryButton->OnClick(cursorPosX, cursorPosY)) {
+				Restart();
+				Game::state = ACTIVE;
+			}
+				
+			if (quitButton->OnClick(cursorPosX, cursorPosY))
+				Game::state = ACTIVE;
+		}
 	}
 		
 	if (!keys[GLFW_MOUSE_BUTTON_LEFT])
@@ -131,19 +147,25 @@ void Game::Restart() {
 	score = 0;
 	state = ACTIVE;
 	bonus->value = 100;
-	//tiles[bonus->tilePosY][bonus->tilePosX].state = EMPTY;
+	tiles[bonus->tilePosY][bonus->tilePosX].state = EMPTY;
 	scoreText->chaine = std::string("Score : 0");
 	bonus->MoveBonus();
 }
 void Game::Render() {
+	scoreText->Draw();
 	player->Draw(*renderer);
 	bonus->draw(*renderer);
-	scoreText->Draw();
+	
 	if (state == PAUSE) {
 		pauseText->Draw();
-		test->Draw(*renderer);
+		resumeButton->Draw(*renderer);
+		quitButton->Draw(*renderer);
 	}
 		
-	if (state == OVER)
+	if (state == OVER) {
 		gameOverText->Draw();
+		retryButton->Draw(*renderer);
+		quitButton->Draw(*renderer);
+	}
+		
 }
