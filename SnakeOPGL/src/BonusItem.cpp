@@ -3,11 +3,15 @@ BonusItem::BonusItem(std::vector<std::vector<Tile>>& map, int x, int y, Texture 
 	value = val;
 	}
 void BonusItem::MoveBonus() {
-	int newPosX;
-	int newPosY;
+	int newPosX; 
 	int randBonus = std::rand() % 100;
+	int newPosY;
+	
 	if (randBonus > 80)
-		effect = SPEED;
+		if (randBonus > 90)
+			effect = SPEED;
+		else
+			effect = TRANSPARENT;
 	else 
 		effect = NONE;
 	do {
@@ -23,6 +27,10 @@ void BonusItem::draw(SpriteRenderer& renderer) {
 	if (effect == SPEED) {
 		Ressource::GetShader("SpriteShader").setBool("buffed", true);
 		this->color = glm::vec4(1.0f, 0.5f, 0.0f, 1.0f);
+	}else
+		if (effect == TRANSPARENT) {
+		Ressource::GetShader("SpriteShader").setBool("buffed", true);
+		this->color = glm::vec4(1.0f, 1.0, 1.0, 0.4f);
 	}
 	else {
 		Ressource::GetShader("SpriteShader").setBool("buffed", false);

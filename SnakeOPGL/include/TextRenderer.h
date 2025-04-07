@@ -21,7 +21,7 @@ public:
 	std::map<char, Character> characters;
 	TextRenderer(const char * fonts);
 	void DrawText(std::string chaine, float x, float y, float scale, glm::vec3 color, Shader& shader);
-	glm::vec2 getSize(std::string chaine);
+	glm::vec3 getSize(std::string chaine);//x = xsize, y = lowestYSize, z = lowestYSize
 private:
 	unsigned int vao, vbo;
 	void setupBuffer();

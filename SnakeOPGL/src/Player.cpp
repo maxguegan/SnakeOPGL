@@ -28,11 +28,26 @@ void Player::update(float deltaTime) {
 		for (it = effects.begin(); it < effects.end(); it++) {
 			
 			(*it).duration -= deltaTime;
+			if ((*it).duration <= 1.0f) {
+				blinkTimer -= deltaTime;
+				if (blinkTimer < 0) {
+					toggleVisible();
+					blinkTimer = BLINK;
+				}
+				
+			}
+
 			if ((*it).duration <= 0.0f)
 			{
-				speed = BASESPEED;
+				if ((*it).type == SPEED) {
+					speed = BASESPEED;
+				}
+				else if ((*it).type == TRANSPARENT) {
+					transparent = false;
+				}
+				
 				effects.erase(it);
-				return;
+				setVisible(true);
 			}
 				
 		}
@@ -42,22 +57,22 @@ void Player::update(float deltaTime) {
 void Player::addBuff(Effect buff) {
 	switch (buff.type) {
 	case TRANSPARENT:
-		
-		for (GameObject& object : body)
-			object.color = glm::vec4(0.7f, 0.7f, 0.7f, 0.5f);
+		transparent = true;
+		for (Effect& effet : effects)
+			if (effet.type == TRANSPARENT) {
+				effet.duration += buff.duration;
+				return;
+			}
+		setColor(transparentColor);
 		break;
 	case SPEED:
 		for (Effect& effet : effects)
 			if (effet.type == SPEED) {
 				effet.duration += buff.duration;
-				break;
+				return;
 			}
-				
 		speed = 30.0f;
-		setColor(glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
-				
-			
-		
+		setColor(speedColor);
 		break;
 	case POINT:
 		break;
@@ -113,7 +128,7 @@ int Player::Move() {
 	default:
 		break;
 	}
-	if (map[headTilePosY][headTilePosX].state == SNAKE)
+	if (map[headTilePosY][headTilePosX].state == SNAKE && !transparent)
 		return -1;
 	if (map[headTilePosY][headTilePosX].state == BONUS) {
 		addSize();
@@ -127,7 +142,7 @@ int Player::Move() {
 void Player::addSize() {
 	int size = body.size();
 	body[size - 1].sprite = bodyTexture;
-	body.push_back(TileObject(map, body[size - 1].tilePosX, body[size - 1].tilePosY,tailTexture, this->size,this->color));
+	body.push_back(TileObject(map, body[size - 1].tilePosX, body[size - 1].tilePosY,tailTexture, this->size,this->baseColor));
 }
 
 void Player::updatePos(int headTilePosX, int headTilePosY) {
@@ -141,7 +156,17 @@ void Player::updatePos(int headTilePosX, int headTilePosY) {
 	map[headTilePosY][headTilePosX].state = SNAKE;
 }
 void Player::setColor(glm::vec4 color) {
-	this->color = color;
+	this->baseColor = color;
 	for (GameObject& parts : body)
 		parts.color = color;
+}
+void Player::toggleVisible() {
+	
+	for (GameObject& parts : body)
+		parts.visible = !parts.visible;
+}
+void Player::setVisible(bool visible) {
+
+	for (GameObject& parts : body)
+		parts.visible = visible;
 }

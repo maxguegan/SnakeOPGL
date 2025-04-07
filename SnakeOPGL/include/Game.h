@@ -30,7 +30,7 @@ public:
 	void Render();
 	void Update(float deltaTime);
 	void ProcessInput();
-	void ProcessMouse(double cursorPosX, double cursorPosY);
+	void ProcessMouse(double cursorPosX, double cursorPosY, GLFWwindow * window);
 	void Restart();
 private:
 	const float tileSize = 30.0f;

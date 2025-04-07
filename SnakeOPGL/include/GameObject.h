@@ -21,6 +21,8 @@ public:
 	
 	Texture sprite;
 
+	bool visible = true;
+
 	GameObject(Texture tex,	glm::vec2 pos,  glm::vec2 size, glm::vec4 color = glm::vec4(1.0f), float rotation = 0.0f);
 	
 	virtual void draw(SpriteRenderer & renderer);

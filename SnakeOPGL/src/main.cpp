@@ -8,7 +8,6 @@ void ProcessInput(GLFWwindow* window, Game& game);
 
 const float SCREEN_WIDTH = 800;
 const float SCREEN_HEIGHT = 600;
-
 float lastFrame = 0.0f;
 float curFrame = 0.0f;
 float deltaTime = 0.0f;
@@ -40,6 +39,7 @@ int main() {
     game.Init();
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glfwSwapInterval(1);
     while (!glfwWindowShouldClose(window)) 
     {
 
@@ -74,7 +74,7 @@ void ProcessInput(GLFWwindow* window, Game& game) {
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) 
         game.keys[GLFW_MOUSE_BUTTON_LEFT] = false;
 
-    game.ProcessMouse(xpos, ypos);
+    game.ProcessMouse(xpos, ypos, window);
 
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)

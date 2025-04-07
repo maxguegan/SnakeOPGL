@@ -71,8 +71,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\SnakeOPGL\bin</OutDir>
-    <IntDir>$(SolutionDir)\SnakeOPGL\obj</IntDir>
+    <OutDir>$(SolutionDir)\SnakeOPGL\bin\</OutDir>
+    <IntDir>$(SolutionDir)\SnakeOPGL\obj\</IntDir>
     <IncludePath>$(SolutionDir)\SnakeOPGL\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\SnakeOPGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>

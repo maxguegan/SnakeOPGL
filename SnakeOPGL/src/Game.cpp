@@ -75,9 +75,12 @@ void Game::Update(float deltaTime) {
 			if (resultMove == 1) {
 				if(bonus->effect == SPEED)
 					player->addBuff(Effect(SPEED, 5.0f, 1));
+				else
+				if (bonus->effect == TRANSPARENT)
+					player->addBuff(Effect(TRANSPARENT, 5.0f, 1));
 				bonus->MoveBonus();;
 				score += bonus->value;
-				bonus->value += bonus->value / 5;
+				bonus->value += 10;
 				scoreText->chaine = std::string("Score : ").append(std::to_string(score));
 			}
 				
@@ -117,7 +120,7 @@ void Game::ProcessInput() {
 	if (!keys[GLFW_KEY_R])
 		lockKeys[GLFW_KEY_R] = false;
 	}
-void Game::ProcessMouse(double cursorPosX, double cursorPosY) {
+void Game::ProcessMouse(double cursorPosX, double cursorPosY, GLFWwindow* window) {
 	cursorPosY = height - cursorPosY;//matrice de projection est de bas en haut alors que le get cursorpos est de haut en bas
 	if (keys[GLFW_MOUSE_BUTTON_LEFT] && !lockKeys[GLFW_MOUSE_BUTTON_LEFT]) {
 		lockKeys[GLFW_MOUSE_BUTTON_LEFT] = true;
@@ -125,7 +128,7 @@ void Game::ProcessMouse(double cursorPosX, double cursorPosY) {
 			if (resumeButton->OnClick(cursorPosX, cursorPosY))
 				Game::state = ACTIVE;
 			if (quitButton->OnClick(cursorPosX, cursorPosY))
-				Game::state = ACTIVE;
+				glfwSetWindowShouldClose(window, true);
 		}
 		if (Game::state == OVER) {
 			if (retryButton->OnClick(cursorPosX, cursorPosY)) {
@@ -134,7 +137,7 @@ void Game::ProcessMouse(double cursorPosX, double cursorPosY) {
 			}
 				
 			if (quitButton->OnClick(cursorPosX, cursorPosY))
-				Game::state = ACTIVE;
+				glfwSetWindowShouldClose(window, true);
 		}
 	}
 		

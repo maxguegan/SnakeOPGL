@@ -4,9 +4,9 @@ TileObject::TileObject(std::vector<std::vector<Tile>>& map, int x, int y, Textur
 {}
 
 void TileObject::setPos(const int x, const int y) {
-	
-
 	tilePosX = x;
 	tilePosY = y;
+	
+
 	this->position = map[tilePosY][tilePosX].position;
 }
