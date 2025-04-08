@@ -73,14 +73,22 @@ void Game::Update(float deltaTime) {
 			if (resultMove == -1)
 				state = OVER;
 			if (resultMove == 1) {
-				if(bonus->effect == SPEED)
-					player->addBuff(Effect(SPEED, 5.0f, 1));
-				else
-				if (bonus->effect == TRANSPARENT)
-					player->addBuff(Effect(TRANSPARENT, 5.0f, 1));
-				bonus->MoveBonus();;
 				score += bonus->value;
 				bonus->value += 10;
+				switch (bonus->effect) {
+				case SPEED:
+					player->addBuff(Effect(SPEED, 5.0f, 1));
+					break;
+				case TRANSPARENT:
+					player->addBuff(Effect(TRANSPARENT, 5.0f, 1));
+					break;
+				case POINT:
+					score += score / 10;
+					break;
+				}
+				
+				bonus->MoveBonus();;
+				
 				scoreText->chaine = std::string("Score : ").append(std::to_string(score));
 			}
 				
